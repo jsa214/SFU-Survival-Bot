@@ -14,6 +14,7 @@ var carpoolPromptMsgId;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
+    //client.channel.send("HI");
 });
 
 //client.channels.get(548960426440786123).send("nope");
@@ -30,16 +31,16 @@ client.on('message', msg => {
         console.log(msg.content);
         var channel = client.channels.get('548960426440786123');
         carpoolFlag = false;
-        channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1])
+        channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1]+"\n(*React with ✅ on this message to reserve a spot. Private Message will be sent once confirmed)")
           .then(message => {
-            carpool = new Carpool(message, data[1], data[0]);
+            carpool = new Carpool(message, data[1], data[0], data[2]);
 
           });
         //new Carpooldata[0]
 
     }
     if (msg.content.includes('I can drive')){
-        msg.channel.send("what time? how many seat? (ex: 18:30,3)")
+        msg.channel.send("What time? How many seat? Where to meet? (ex: 18:30,3,In front of library)")
           .then(message => {
             carpoolPromptMsgId = message.id;
             carpoolFlag = true
@@ -47,12 +48,6 @@ client.on('message', msg => {
         //console.log(msg.content);
     }
 
-    if (msg.content.includes('send to main')){
-        var channel = client.channels.get('548960426440786123');
-        channel.sendMessage("Hello world")
-          .then(message => {
-          });
-    }
 
     if (msg.content.includes('road')) {
         rp(sfuRoadConditionsUrl).then(function(html){
@@ -76,7 +71,7 @@ client.on('message', msg => {
         });;
     }
 
-    if(msg.content === 'bus'){
+    if(msg.content.toLowerCase() === 'bus'){
         msg.reply(("Route Options: 143, 144, 145, 95"));
     }
 
@@ -235,17 +230,14 @@ function bustostop(busNo){
 }
 
 class Carpool {
-    constructor(message, seats, time) {
+    constructor(message, seats, time, location) {
         this.driver = message.author.id;
         this.message = message;
         this.seats = seats;
+        this.location= location;
         this.time = time;
         this.passengers = [];
     }
-
-    // get message() {
-    //     return this.message;
-    // }
 
     addPassenger(passenger) {
         if(this.passengers.length < this.seats) {
