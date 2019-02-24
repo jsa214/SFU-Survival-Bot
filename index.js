@@ -10,7 +10,7 @@ const sfuApi = 'http://api.lib.sfu.ca/weather/forecast';
 
 var carpool;
 var carpoolFlag = false;
-var carpoolPromptMsg;
+var carpoolPromptMsgId;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -21,7 +21,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     var data;
-    if(carpoolFlag && msg.id != carpoolPromptMsg) {
+    if(carpoolFlag && msg.id != carpoolPromptMsgId) {
         data = msg.content.split(",");
       //  console.log(data)
         console.log(msg.content);
@@ -38,7 +38,7 @@ client.on('message', msg => {
     if (msg.content.includes('I can drive')){
         msg.channel.send("what time? how many seat? (ex: 18:30,3)")
           .then(message => {
-            carpoolPromptMsg = message.id;
+            carpoolPromptMsgId = message.id;
             carpoolFlag = true
           });
         //console.log(msg.content);
