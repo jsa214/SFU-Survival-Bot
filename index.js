@@ -25,11 +25,11 @@ client.on('message', msg => {
     if(!msg.author.bot) {
         //msg.reply(msg.channel.type);
 
-        if((msg.content.includes('hi')||msg.content.includes('hello')||msg.content.includes('help'))&&msg.channel.type==='dm'){
-          var helpMsg = 'Hello, I am SFU survival bot! Here are the commands you can try. \n'
-              + 'Commands include:\t carpool,\t road,\t bus,\t library/lib,\t weather';
+        if((msg.content.includes('hi') || msg.content.includes('hello') || msg.content.includes('help')) && msg.channel.type === 'dm'){
+            var helpMsg = 'Hello, I am SFU survival bot! Here are the commands you can try. \n'
+                + 'Commands include:\t carpool,\t road,\t bus,\t library/lib,\t weather';
 
-          msg.channel.send(helpMsg);
+            msg.channel.send(helpMsg);
         }
         var data;
         if(carpoolFlag && msg.id != carpoolPromptMsgId) {
@@ -37,27 +37,23 @@ client.on('message', msg => {
             if(data.length != 2 && typeof data[1] == NaN) {
                 msg.channel.send("Wrong arguments");
             }
-          //  console.log(data)
             console.log(msg.content);
             var channel = client.channels.get('548960426440786123');
             carpoolFlag = false;
             channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1]+"\n(*React with ✅ on this message to reserve a spot. Private Message will be sent once confirmed)")
-              .then(message => {
-                carpool = new Carpool(message, data[1], data[0], data[2]);
+                .then(message => {
+                    carpool = new Carpool(message, data[1], data[0], data[2]);
 
-              });
-            //new Carpooldata[0]
-
+                });
         }
+
         if (msg.content.includes('carpool')){
             msg.channel.send("What time? How many seat? Where to meet? (ex: 18:30,3,In front of library)")
-              .then(message => {
-                carpoolPromptMsgId = message.id;
-                carpoolFlag = true
-              });
-            //console.log(msg.content);
+                .then(message => {
+                    carpoolPromptMsgId = message.id;
+                    carpoolFlag = true
+                });
         }
-
 
         if (msg.content.includes('road')) {
             rp(sfuRoadConditionsUrl).then(function(html){
@@ -81,36 +77,33 @@ client.on('message', msg => {
             });;
         }
 
-        if(msg.content.toLowerCase() === 'bus'){
+        if(msg.content.includes('bus')){
             msg.reply(("Route Options: 143, 144, 145, 95.\nReply with route number."));
         }
 
-        if(msg.content.toLowerCase() === 'library' || msg.content.toLowerCase()===('lib')){
+        if(msg.content.includes('library') || msg.content.includes('lib')){
             var lib = {
                 uri: 'http://api.lib.sfu.ca/hours/2/summary',
                 json: true
             };
-            rp(lib).then(function(response){
-              //  var response = $('location').text();
-                //var obj = JSON.parse(response)
-                for (i=0; i<=2; i++){
-                  msg.channel.send(response[i].location+"\n"+"\tOpen Time: "
-                                    + response[i].open_time+"\n"+ "\tClose Time: "+
-                                    response[i].close_time);
-                  //msg.channel.send("Open Time: " + response[i].open_time);
-                  //msg.reply("Close Time: "+ response[i].close_time);
-                }
+            rp(lib)
+                .then(function(response){
+                    // .parse(response)
+                    for (i=0; i<=2; i++){
+                        msg.channel.send(response[i].location+"\n"+"\tOpen Time: "
+                        + response[i].open_time+"\n"+ "\tClose Time: "
+                        + response[i].close_time);
+                    }
                 })
                 .catch(function (err){
-                  msg.reply('not working')
-            });
+                    msg.reply('not working');
+                });
         }
 
-        if(msg.content=='145'||msg.content=='143'||msg.content=='95'||msg.content=='144'){
+        if(msg.content.includes('145') || msg.content.includes('143') || msg.content.includes('95') || msg.content.includes('144')){
             var link = 'http://api.translink.ca/RTTIAPI/V1/stops/'+bustostop(msg.content)+'/estimates'
             var bus95 = {
-                uri: link,
-                //'http://api.translink.ca/RTTIAPI/V1/stops/51861/estimates',
+                uri: link, //'http://api.translink.ca/RTTIAPI/V1/stops/51861/estimates',
                 qs: {
                     apiKey: 'rx3BUkEmtofrx0Dr9JfZ', // -> uri + '?access_token=xxxxx%20xxxxx'
                     count: 1
@@ -207,18 +200,7 @@ client.on('message', msg => {
                 })
                 .catch(function (err) {
                 });
-
         }
-
-        /*if(msg.content === 'help') {
-            var helpMsg = ''
-                + '\n\t' + 'I can drive'
-                + '\n\t' + 'road'
-                + '\n\t' + 'bus'
-                + '\n\t' + 'library/lib'
-                + '\n\t' + 'weather'
-            msg.channel.send(helpMsg);
-        }*/
     }
 });
 
