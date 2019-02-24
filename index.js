@@ -9,6 +9,8 @@ const sfuRoadConditionsUrl = 'http://www.sfu.ca/security/sfuroadconditions/';
 const sfuApi = 'http://api.lib.sfu.ca/weather/forecast';
 
 var carpool;
+var carpoolFlag = false;
+var carpoolPromptMsg;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -18,10 +20,37 @@ client.on('ready', () => {
 //bot.guilds.get("548960426440786123").channels.get("548960426440786123").send("Spook!");
 
 client.on('message', msg => {
-    if (msg.content.includes('send to main')){
-      var channel = client.channels.get('548960426440786123');
-      channel.sendMessage("Hello world");
+    var data;
+    if(carpoolFlag && msg.id != carpoolPromptMsg) {
+        data = msg.content.split(",");
+      //  console.log(data)
+        console.log(msg.content);
+        var channel = client.channels.get('548960426440786123');
+        channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1])
+          .then(message => {
+            carpool = new Carpool(message, data[1], data[0]);
+            carpoolFlag = false;
+
+          });
+        //new Carpooldata[0]
+
     }
+    if (msg.content.includes('I can drive')){
+        msg.channel.send("what time? how many seat? (ex: 18:30,3)")
+          .then(message => {
+            carpoolPromptMsg = message.id;
+            carpoolFlag = true
+          });
+        //console.log(msg.content);
+    }
+
+    if (msg.content.includes('send to main')){
+        var channel = client.channels.get('548960426440786123');
+        channel.sendMessage("Hello world")
+          .then(message => {
+          });
+    }
+
     if (msg.content.includes('road')) {
         rp(sfuRoadConditionsUrl).then(function(html){
             //success!
@@ -179,6 +208,7 @@ client.on('messageReactionAdd', (reaction, user) => {
         carpool.addPassenger();
     // }
 });
+
 
 function bustostop(busNo){
     if (busNo==95){
