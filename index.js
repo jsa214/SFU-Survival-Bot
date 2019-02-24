@@ -8,6 +8,8 @@ const sfuRoadConditionsUrl = 'http://www.sfu.ca/security/sfuroadconditions/';
 //sfu api
 const sfuApi = 'http://api.lib.sfu.ca/weather/forecast';
 
+var carpool;
+
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -172,6 +174,12 @@ client.on('message', msg => {
     }
 });
 
+client.on('messageReactionAdd', (reaction, user) => {
+    if(reaction.message.id === carpool.message.id) {
+        console.log(reaction.emoji.name);
+    }
+});
+
 function bustostop(busNo){
     if (busNo==95){
       return '53096'
@@ -184,6 +192,21 @@ function bustostop(busNo){
     }
     if (busNo=143){
       return '52998'
+    }
+}
+
+class Carpool {
+    #message;
+    #seats;
+    #time;
+    constructor(message, seats, time) {
+        this.message = message;
+        this.seats = seats;
+        this.time = time;
+    }
+
+    get message() {
+        return this.message;
     }
 }
 
