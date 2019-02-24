@@ -33,10 +33,15 @@ client.on('message', msg => {
         });;
     }
 
-    if (msg.content=='145'||msg.content=='143'||msg.content=='95'||msg.content=='144'){
+    if(msg.content === 'bus'){
+        msg.reply(("Route Options: 143, 144, 145, 95"));
+    }
+
+    if(msg.content=='145'||msg.content=='143'||msg.content=='95'||msg.content=='144'){
         var link = 'http://api.translink.ca/RTTIAPI/V1/stops/'+bustostop(msg.content)+'/estimates'
         var bus95 = {
-            uri: link,//'http://api.translink.ca/RTTIAPI/V1/stops/51861/estimates',
+            uri: link,
+            //'http://api.translink.ca/RTTIAPI/V1/stops/51861/estimates',
             qs: {
                 apiKey: 'rx3BUkEmtofrx0Dr9JfZ', // -> uri + '?access_token=xxxxx%20xxxxx'
                 count: 1
@@ -49,40 +54,41 @@ client.on('message', msg => {
                 //msg.reply(response)
                 //const $ = cheerio.load(html);
                 const $=cheerio.load(response);
-
                 var cancel = $('CancelledTrip').text();
+                var time = $('ExpectedLeaveTime').text();
                 var busNo = bustostop(msg.content)
-                // var image1 = $()
-                //msg.reply('BUS 95 Status:')
-                if (cancel=='false'){
-                    cancel = 'Running'
-                }
-                msg.reply(msg.content+": "+cancel);
+                var image1 = $()
 
-        })
-        .catch(function (err) {
-            msg.reply('not working')
-        });
-    }
-    if (msg.content === 'bus'){
-        msg.reply(("Route Options: 143, 144, 145, 95"));
-        //status();
+                if (cancel=='false'){
+                cancel = 'Running'
+                }
+                else{
+                cancel ='Cancelled'
+                }
+                msg.reply(msg.content+": ")
+                msg.reply('Status: '+cancel)
+                //msg.reply(msg.content+": "+cancel);
+                msg.reply("Expected Leave Time (Upper Loop): "+time);
+
+            })
+            .catch(function (err) {
+                msg.reply('not working')
+            });
     }
 });
 
-
 function bustostop(busNo){
     if (busNo==95){
-        return '53096'
+      return '53096'
     }
     if (busNo==145){
-        return '51861'
+      return '51861'
     }
     if (busNo=144){
-        return '52807'
+      return '52807'
     }
     if (busNo=143){
-        return '51863'
+      return '52998'
     }
 }
 
