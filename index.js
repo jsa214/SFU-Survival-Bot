@@ -17,20 +17,9 @@ client.on('message', msg => {
             const $ = cheerio.load(html);
             var roadStatus = $('.roadStatus').text();
 
-            var webcams = $('.webcams').html();
+            // var image1 = $()
+            msg.reply(roadStatus);
 
-            var webcamImgs = [];
-            $('a .webcamimg').each(function(i, elem) {
-                var webcamAlt = $(this).attr('alt');
-                if(webcamAlt === 'Gaglardi intersection' ||
-                    webcamAlt === 'Tower Road South') {
-                    webcamImgs.push($(this).attr('src'));
-                }
-            });
-            console.log(webcamImgs);
-            msg.channel.send('Roads: ' + roadStatus, {
-                files: webcamImgs
-            });
         }).catch(function(err){
             //handle error
         });;
@@ -49,7 +38,7 @@ function bustostop(busNo){
           return '52807'
         }
         if (busNo=143){
-          return '51863'
+          return '52998'
         }
 }
 
@@ -71,15 +60,21 @@ client.on('message',msg =>{
         //msg.reply(response)
         //const $ = cheerio.load(html);
         const $=cheerio.load(response);
-
         var cancel = $('CancelledTrip').text();
+        var time = $('ExpectedLeaveTime').text();
         var busNo = bustostop(msg.content)
-        // var image1 = $()
-        //msg.reply('BUS 95 Status:')
+        var image1 = $()
+
         if (cancel=='false'){
           cancel = 'Running'
         }
-        msg.reply(msg.content+": "+cancel);
+        else{
+          cancel ='Cancelled'
+        }
+        msg.reply(msg.content+": ")
+        msg.reply('Status: '+cancel)
+        //msg.reply(msg.content+": "+cancel);
+        msg.reply("Expected Leave Time (Upper Loop): "+time);
 
     }).catch(function (err) {
         msg.reply('not working')
