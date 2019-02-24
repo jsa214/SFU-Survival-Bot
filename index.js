@@ -1,10 +1,12 @@
 const {Client, Attachment} = require('discord.js');
 const client = new Client();
+const rp = require('request-promise');
+const cheerio = require('cheerio');
 
 //sfu road conditions url
 const sfuRoadConditionsUrl = 'http://www.sfu.ca/security/sfuroadconditions/';
-const rp = require('request-promise');
-const cheerio = require('cheerio');
+//sfu api
+const sfuApi = 'http://api.lib.sfu.ca/weather/forecast';
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -74,6 +76,71 @@ client.on('message', msg => {
             .catch(function (err) {
                 msg.reply('not working')
             });
+    }
+
+    if(msg.content.includes('weather')) {
+        var options;
+        if(msg.content.includes('surrey')) {
+            options = {
+                uri: sfuApi,
+                qs: {
+                    key: '2dd8bd4c210b4470127f6bf5255dd993',
+                    lat: 49.187873,
+                    lng: -122.848297,
+                    location: 'surrey'
+                },
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+        } else if(msg.content.includes('vancouver')) {
+            options = {
+                uri: sfuApi,
+                qs: {
+                    key: '2dd8bd4c210b4470127f6bf5255dd993',
+                    lat: 49.284462,
+                    lng: -123.111719,
+                    location: 'vancouver'
+                },
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+        } else {
+            options = {
+                uri: sfuApi,
+                qs: {
+                    key: '2dd8bd4c210b4470127f6bf5255dd993',
+                    lat: 49.2792,
+                    lng: -122.9086,
+                    location: 'burnaby'
+                },
+                headers: {
+                    'User-Agent': 'Request-Promise'
+                },
+                json: true // Automatically parses the JSON string in the response
+            };
+        }
+
+
+        rp(options)
+            .then(function (response) {
+                var current = response.currently;
+                var today = response.today;
+                var tomorrow = response.tomorrow;
+                var msgBuilder = 'Current:\n'
+                    + '\t' + current.temperature + ' °\t' + current.summary
+                    + '\nToday:\n'
+                    + '\t' + today.max_temperature + '°/' + today.min_temperature + '°\t' + today.summary
+                    + '\nTomorrow:\n'
+                    + '\t' + tomorrow.max_temperature + '°/' + tomorrow.min_temperature + '°\t' + tomorrow.summary;
+                msg.channel.send(msgBuilder);
+            })
+            .catch(function (err) {
+            });
+
     }
 });
 
