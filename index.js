@@ -17,9 +17,20 @@ client.on('message', msg => {
             const $ = cheerio.load(html);
             var roadStatus = $('.roadStatus').text();
 
-            // var image1 = $()
-            msg.reply(roadStatus);
+            var webcams = $('.webcams').html();
 
+            var webcamImgs = [];
+            $('a .webcamimg').each(function(i, elem) {
+                var webcamAlt = $(this).attr('alt');
+                if(webcamAlt === 'Gaglardi intersection' ||
+                    webcamAlt === 'Tower Road South') {
+                    webcamImgs.push($(this).attr('src'));
+                }
+            });
+            console.log(webcamImgs);
+            msg.channel.send('Roads: ' + roadStatus, {
+                files: webcamImgs
+            });
         }).catch(function(err){
             //handle error
         });;
