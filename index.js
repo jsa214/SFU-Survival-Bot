@@ -23,6 +23,9 @@ client.on('message', msg => {
     var data;
     if(carpoolFlag && msg.id != carpoolPromptMsgId) {
         data = msg.content.split(",");
+        if(data.length != 2 && typeof data[1] == NaN) {
+            msg.channel.send("Wrong arguments");
+        }
       //  console.log(data)
         console.log(msg.content);
         var channel = client.channels.get('548960426440786123');
@@ -240,15 +243,24 @@ class Carpool {
         this.passengers = [];
     }
 
-    get message() {
-        return this.message;
-    }
+    // get message() {
+    //     return this.message;
+    // }
 
     addPassenger(passenger) {
-        if(this.passenger.length < seats) {
+        if(this.passengers.length < this.seats) {
             this.passengers.push(passenger);
             console.log(this.passengers);
         }
+        if(this.passengers.length == this.seats) {
+            var msg = "Going down:\n" + "Time: "+  carpool.time + ".";
+            this.passengers.forEach((id) => {
+                var user = client.users.get(id);
+                user.send(msg);
+                console.log("send msg to passengers");
+            });
+        }
+
     }
 
     removePassenger(passenger) {
