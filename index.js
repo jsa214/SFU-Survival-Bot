@@ -175,9 +175,9 @@ client.on('message', msg => {
 });
 
 client.on('messageReactionAdd', (reaction, user) => {
-    if(reaction.message.id === carpool.message.id) {
-        console.log(reaction.emoji.name);
-    }
+    // if(reaction.message.id === carpool.message.id) {
+        carpool.addPassenger();
+    // }
 });
 
 function bustostop(busNo){
@@ -196,17 +196,23 @@ function bustostop(busNo){
 }
 
 class Carpool {
-    #message;
-    #seats;
-    #time;
     constructor(message, seats, time) {
+        this.driver = driver;
         this.message = message;
         this.seats = seats;
         this.time = time;
+        this.passengers = [];
     }
 
     get message() {
         return this.message;
+    }
+
+    addPassenger(passenger) {
+        if(this.passenger.length < seats) {
+            this.headcount++;
+            this.passengers.push(passenger);
+        }
     }
 }
 
