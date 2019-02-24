@@ -23,7 +23,14 @@ client.on('ready', () => {
 client.on('message', msg => {
 
     if(!msg.author.bot) {
-        msg.reply(msg.channel.type);
+        //msg.reply(msg.channel.type);
+
+        if((msg.content.includes('hi')||msg.content.includes('hello')||msg.content.includes('help'))&&msg.channel.type==='dm'){
+          var helpMsg = 'Hello, I am SFU survival bot! Here are the commands you can try. \n'
+              + 'Commands include:\t carpool,\t road,\t bus,\t library/lib,\t weather';
+
+          msg.channel.send(helpMsg);
+        }
         var data;
         if(carpoolFlag && msg.id != carpoolPromptMsgId) {
             data = msg.content.split(",");
@@ -42,7 +49,7 @@ client.on('message', msg => {
             //new Carpooldata[0]
 
         }
-        if (msg.content.includes('I can drive')){
+        if (msg.content.includes('carpool')){
             msg.channel.send("What time? How many seat? Where to meet? (ex: 18:30,3,In front of library)")
               .then(message => {
                 carpoolPromptMsgId = message.id;
@@ -75,7 +82,7 @@ client.on('message', msg => {
         }
 
         if(msg.content.toLowerCase() === 'bus'){
-            msg.reply(("Route Options: 143, 144, 145, 95"));
+            msg.reply(("Route Options: 143, 144, 145, 95.\nReply with route number."));
         }
 
         if(msg.content.toLowerCase() === 'library' || msg.content.toLowerCase()===('lib')){
@@ -203,7 +210,7 @@ client.on('message', msg => {
 
         }
 
-        if(msg.content === 'help') {
+        /*if(msg.content === 'help') {
             var helpMsg = ''
                 + '\n\t' + 'I can drive'
                 + '\n\t' + 'road'
@@ -211,7 +218,7 @@ client.on('message', msg => {
                 + '\n\t' + 'library/lib'
                 + '\n\t' + 'weather'
             msg.channel.send(helpMsg);
-        }
+        }*/
     }
 });
 
