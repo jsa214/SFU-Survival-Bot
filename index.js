@@ -253,7 +253,7 @@ class Carpool {
             console.log(this.passengers);
         }
         if(this.passengers.length == this.seats) {
-            var msg = "Going down:\n" + "Time: "+  carpool.time + ".";
+            var msg = "Going down:\n" + "Time: "+  carpool.time + "\nMeet at " + this.location;
             this.passengers.forEach((id) => {
                 var user = client.users.get(id);
                 user.send(msg);
