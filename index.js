@@ -10,7 +10,14 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+//client.channels.get(548960426440786123).send("nope");
+//bot.guilds.get("548960426440786123").channels.get("548960426440786123").send("Spook!");
+
 client.on('message', msg => {
+    if (msg.content.includes('send to main')){
+      var channel = client.channels.get('548960426440786123');
+      channel.sendMessage("Hello world");
+    }
     if (msg.content.includes('road')) {
         rp(sfuRoadConditionsUrl).then(function(html){
             //success!
@@ -35,6 +42,27 @@ client.on('message', msg => {
 
     if(msg.content === 'bus'){
         msg.reply(("Route Options: 143, 144, 145, 95"));
+    }
+
+    if(msg.content.toLowerCase() === 'library' || msg.content.toLowerCase()===('lib')){
+        var lib = {
+            uri: 'http://api.lib.sfu.ca/hours/2/summary',
+            json: true
+        };
+        rp(lib).then(function(response){
+          //  var response = $('location').text();
+            //var obj = JSON.parse(response)
+            for (i=0; i<=2; i++){
+              msg.channel.send(response[i].location+"\n"+"\tOpen Time: "
+                                + response[i].open_time+"\n"+ "\tClose Time: "+
+                                response[i].close_time);
+              //msg.channel.send("Open Time: " + response[i].open_time);
+              //msg.reply("Close Time: "+ response[i].close_time);
+            }
+            })
+            .catch(function (err){
+              msg.reply('not working')
+        });
     }
 
     if(msg.content=='145'||msg.content=='143'||msg.content=='95'||msg.content=='144'){
