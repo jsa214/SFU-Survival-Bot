@@ -204,9 +204,15 @@ client.on('message', msg => {
 });
 
 client.on('messageReactionAdd', (reaction, user) => {
-    // if(reaction.message.id === carpool.message.id) {
-        carpool.addPassenger();
-    // }
+    if(reaction.message.id === carpool.message.id && reaction.emoji.name === '✅') {
+        carpool.addPassenger(user.id);
+    }
+});
+
+client.on('messageReactionRemove', (reaction, user) => {
+    if(reaction.message.id === carpool.message.id && reaction.emoji.name === '✅') {
+        carpool.removePassenger(user.id);
+    }
 });
 
 
@@ -240,9 +246,14 @@ class Carpool {
 
     addPassenger(passenger) {
         if(this.passenger.length < seats) {
-            this.headcount++;
             this.passengers.push(passenger);
+            console.log(this.passengers);
         }
+    }
+
+    removePassenger(passenger) {
+        this.passengers.splice(this.passengers.indexOf(passenger), 1);
+        console.log(this.passengers);
     }
 }
 
