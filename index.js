@@ -16,9 +16,13 @@ client.on('ready', () => {
 //bot.guilds.get("548960426440786123").channels.get("548960426440786123").send("Spook!");
 
 client.on('message', msg => {
+    if (msg.content.includes('I can drive')){
+        msg
+    }
+
     if (msg.content.includes('send to main')){
-      var channel = client.channels.get('548960426440786123');
-      channel.sendMessage("Hello world");
+        var channel = client.channels.get('548960426440786123');
+        channel.sendMessage("Hello world");
     }
     if (msg.content.includes('road')) {
         rp(sfuRoadConditionsUrl).then(function(html){
@@ -171,6 +175,13 @@ client.on('message', msg => {
 
     }
 });
+
+class CarPool{
+    constructor(time, num_peop) {
+      this.time = time;
+      this.num_peop = num_peop;
+    }
+}
 
 function bustostop(busNo){
     if (busNo==95){
