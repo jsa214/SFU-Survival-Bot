@@ -26,10 +26,10 @@ client.on('message', msg => {
       //  console.log(data)
         console.log(msg.content);
         var channel = client.channels.get('548960426440786123');
+        carpoolFlag = false;
         channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1])
           .then(message => {
             carpool = new Carpool(message, data[1], data[0]);
-            carpoolFlag = false;
 
           });
         //new Carpooldata[0]
