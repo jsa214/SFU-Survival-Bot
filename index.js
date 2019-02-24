@@ -227,7 +227,7 @@ function bustostop(busNo){
 
 class Carpool {
     constructor(message, seats, time) {
-        this.driver = driver;
+        this.driver = message.author.id;
         this.message = message;
         this.seats = seats;
         this.time = time;
