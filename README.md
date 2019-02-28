@@ -15,6 +15,4 @@ Objective
     - Road Conditions
     - Ride Share
 
-![alt text](https://raw.githubusercontent.com/jsa214/SFU-Survival-Bot/branch/path/to/carpool1.png)
-
-    
+![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/carpool1.png)
