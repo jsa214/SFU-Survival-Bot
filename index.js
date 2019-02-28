@@ -1,3 +1,10 @@
+/***************************************************/
+/******************Project-Escape SFU***************/
+/*******************SFU Survival Bot****************/
+/***************************************************/
+/**************************************02/23/2019***/
+/**************************************Jihoon Sung**/
+
 const {Client, Attachment} = require('discord.js');
 const client = new Client();
 const rp = require('request-promise');
@@ -14,31 +21,32 @@ var carpoolPromptMsgId;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    //client.channel.send("HI");
 });
 
-//client.channels.get(548960426440786123).send("nope");
-//bot.guilds.get("548960426440786123").channels.get("548960426440786123").send("Spook!");
 
+//For the input:
 client.on('message', msg => {
 
     if(!msg.author.bot) {
-        //msg.reply(msg.channel.type);
-
+        //Opening help message
         if((msg.content.includes('hi') || msg.content.includes('hello') || msg.content.includes('help')) && msg.channel.type === 'dm'){
             var helpMsg = 'Hello, I am SFU survival bot! Here are the commands you can try. \n'
-                + 'Commands include:\t carpool,\t road,\t bus,\t library/lib,\t weather';
-
+                + 'Commands include:\t carpool,\t road,\t bus,\t library/lib,\t weather\n'
+                + 'Ex:tell me surrey campus weather';
             msg.channel.send(helpMsg);
         }
+
+        //Carpool Function
         var data;
         if(carpoolFlag && msg.id != carpoolPromptMsgId) {
             data = msg.content.split(",");
             if(data.length != 2 && typeof data[1] == NaN) {
                 msg.channel.send("Wrong arguments");
             }
-            console.log(msg.content);
+
+            //Sends to the channel 548960426440786123
             var channel = client.channels.get('548960426440786123');
+            //Turn flag to 0
             carpoolFlag = false;
             channel.send("Going down:\n" + "Time: "+  data[0] + "\nNum of Seats: "+ data[1]+"\n(*React with ✅ on this message to reserve a spot. Private Message will be sent once confirmed)")
                 .then(message => {
@@ -51,15 +59,18 @@ client.on('message', msg => {
             msg.channel.send("What time? How many seat? Where to meet? (ex: 18:30,3,In front of library)")
                 .then(message => {
                     carpoolPromptMsgId = message.id;
+                    //Run carpool
                     carpoolFlag = true
                 });
         }
 
+        //Road conditions:
         if (msg.content.includes('road')) {
             rp(sfuRoadConditionsUrl).then(function(html){
-                //success!
+                //Webscraper cheerio
                 const $ = cheerio.load(html);
                 var roadStatus = $('.roadStatus').text();
+                //Get current webcam images
                 var webcams = $('.webcams').html();
                 var webcamImgs = [];
                 $('a .webcamimg').each(function(i, elem) {
@@ -77,10 +88,9 @@ client.on('message', msg => {
             });;
         }
 
-        if(msg.content.includes('bus')){
-            msg.reply(("Route Options: 143, 144, 145, 95.\nReply with route number."));
-        }
 
+
+        //Library functions
         if(msg.content.includes('library') || msg.content.includes('lib')){
             var lib = {
                 uri: 'http://api.lib.sfu.ca/hours/2/summary',
@@ -100,7 +110,12 @@ client.on('message', msg => {
                 });
         }
 
+        //Prompt bus functions
+        if(msg.content.includes('bus')){
+            msg.reply(("Route Options: 143, 144, 145, 95.\nReply with route number."));
+        }
         if(msg.content.includes('145') || msg.content.includes('143') || msg.content.includes('95') || msg.content.includes('144')){
+            //Get RTTI info from TRANSLINK API
             var link = 'http://api.translink.ca/RTTIAPI/V1/stops/'+bustostop(msg.content)+'/estimates'
             var bus95 = {
                 uri: link, //'http://api.translink.ca/RTTIAPI/V1/stops/51861/estimates',
@@ -138,8 +153,10 @@ client.on('message', msg => {
                 });
         }
 
+        //Weather info from weather API
         if(msg.content.includes('weather')) {
             var options;
+            //Surrey Campus
             if(msg.content.includes('surrey')) {
                 options = {
                     uri: sfuApi,
@@ -154,7 +171,9 @@ client.on('message', msg => {
                     },
                     json: true // Automatically parses the JSON string in the response
                 };
-            } else if(msg.content.includes('vancouver')) {
+            }
+            //Vancouver campus
+            else if(msg.content.includes('vancouver')) {
                 options = {
                     uri: sfuApi,
                     qs: {
@@ -168,7 +187,9 @@ client.on('message', msg => {
                     },
                     json: true // Automatically parses the JSON string in the response
                 };
-            } else {
+            }
+            //Unless specified, Burnaby Campus:
+            else {
                 options = {
                     uri: sfuApi,
                     qs: {
@@ -204,6 +225,9 @@ client.on('message', msg => {
     }
 });
 
+
+/*****Getting Reactions from Users as Poll Vote*/
+
 client.on('messageReactionAdd', (reaction, user) => {
     if(reaction.message.id === carpool.message.id && reaction.emoji.name === '✅') {
         carpool.addPassenger(user.id);
@@ -217,6 +241,7 @@ client.on('messageReactionRemove', (reaction, user) => {
 });
 
 
+/*Bus Stops*/
 function bustostop(busNo){
     if (busNo==95){
       return '53096'
@@ -232,6 +257,8 @@ function bustostop(busNo){
     }
 }
 
+
+/*Carpool Class*/
 class Carpool {
     constructor(message, seats, time, location) {
         this.driver = message.author.id;

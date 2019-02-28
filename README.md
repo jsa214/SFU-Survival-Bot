@@ -1,4 +1,4 @@
-"# SFU-Survival-Bot" 
+"# SFU-Survival-Bot"
 Project Escape SFU
 
 
@@ -6,7 +6,7 @@ Problem Description
   - Simon Fraser University is located on top of mountain
   - Every winter, campus closes without notice
   - Lack of centralized info program
-  
+
 Objective
   - Create a program that notifies students regarding following info:
     - Weather Status
@@ -14,3 +14,5 @@ Objective
     - Library Hours
     - Road Conditions
     - Ride Share
+
+![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
