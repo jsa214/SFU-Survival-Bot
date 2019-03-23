@@ -1,13 +1,13 @@
-"# SFU-Survival-Bot"
+# SFU-Survival-Bot
 Project Escape SFU
 
 
-Problem Description
+## Problem Description
   - Simon Fraser University is located on top of mountain
   - Every winter, campus closes without notice
   - Lack of centralized info program
 
-Objective
+## Objective
   - Create a program that notifies students regarding following info:
     - Weather Status
     - Bus Status
@@ -15,7 +15,7 @@ Objective
     - Road Conditions
     - Ride Share
 
-Implementations
+## Implementations
   - Based on node.js
     - discord.js module
   - Data Collection through:
@@ -26,25 +26,25 @@ Implementations
     - Cheerio Web Scraper
       - HTML Data
 
-Demo Screenshots
+## Demo Screenshots
   - Join Discord Channel 'Escape SFU'
     - "https://discord.gg/23gvHB7"
   - Send 'hi' or 'hello' or 'help' to SFU Survival Bot to start
 
-Start Demo
+## Start Demo
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/Start.png)
 
-Help Demo
+## Help Demo
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/help.png)
 
-Bus Demo
+## Bus Demo
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/bus.png)
 
-Road Demo
+## Road Demo
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/road.png)
 
-Carpool 1
+## Carpool 1
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/carpool1.png)
 
- Carpool 2
+## Carpool 2
 ![alt text](https://github.com/jsa214/SFU-Survival-Bot/blob/master/carpool2.png)
